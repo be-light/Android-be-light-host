@@ -26,6 +26,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="지우기" />
-
+    <Button
+        android:id="@+id/host_reg_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="호스트등록" />
+    <Button
+        android:id="@+id/host_mgt_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="호스트관리" />
     
 </LinearLayout>
