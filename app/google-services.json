@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "684223052100",
+    "firebase_url": "https://osam-host.firebaseio.com",
+    "project_id": "osam-host",
+    "storage_bucket": "osam-host.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684223052100:android:1606a53e76c6adad79bf11",
+        "android_client_info": {
+          "package_name": "com.example.a1117p.osam.user.host"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684223052100-b8d3uujauiqa2rkuf5q6tnk9ja32pe8p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.a1117p.osam.user.host",
+            "certificate_hash": "c1e4f5676822ddb01efd1adf44580dd38c91a73b"
+          }
+        },
+        {
+          "client_id": "684223052100-ecpcbjfo0f6kkhhmd4a35kv6qmp6o4d9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwgvRU-gNjK8vE6haomCo8tx-SXuJNbSQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684223052100-ecpcbjfo0f6kkhhmd4a35kv6qmp6o4d9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
