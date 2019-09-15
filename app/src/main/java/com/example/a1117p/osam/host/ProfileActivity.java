@@ -21,7 +21,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try{
-                    final String html = RequestHttpURLConnection.request("http://15.164.220.47/api/hoster",null,true,"GET");
+                    final String html = RequestHttpURLConnection.request("http://121.184.10.219/api/hoster",null,true,"GET");
                     JSONParser jsonParser = new JSONParser();
                     JSONObject jsonObj = (JSONObject) jsonParser.parse(html);
                     final JSONObject jsonObj2 = (JSONObject) jsonObj.get("user");
@@ -74,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
                 new Thread(new Runnable(){
                     @Override
                     public void run() {
-                        final String html = RequestHttpURLConnection.request("http://15.164.220.47/api/hoster?_method=PUT",params,true,"POST");
+                        final String html = RequestHttpURLConnection.request("http://121.184.10.219/api/hoster?_method=PUT",params,true,"POST");
                         runOnUiThread(new Runnable(){
                             
                             @Override

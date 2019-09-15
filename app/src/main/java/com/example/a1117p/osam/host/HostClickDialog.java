@@ -53,8 +53,8 @@ public class HostClickDialog extends Dialog {
                     public void run() {
                         final HashMap params = new HashMap<String, String>();
 
-                        params.put("idx", item.getIdx());
-                        final String html = RequestHttpURLConnection.request("http://15.164.220.47/api/host?_method=DELETE", params,true, "POST");
+                        params.put("hostIdx", item.getIdx());
+                        final String html = RequestHttpURLConnection.request("http://121.184.10.219/api/host?_method=DELETE", params,true, "POST");
                         activity.runOnUiThread(new Runnable() {
 
                             @Override

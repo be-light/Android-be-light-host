@@ -25,7 +25,7 @@ public class HostMgtActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    final String html = RequestHttpURLConnection.request("http://15.164.220.47/api/host", null, true, "GET");
+                    final String html = RequestHttpURLConnection.request("http://121.184.10.219/api/host", null, true, "GET");
                     JSONParser jsonParser = new JSONParser();
                     JSONArray jsonArray = (JSONArray) jsonParser.parse(html);
                     adapter = new ListViewAdapter(jsonArray);

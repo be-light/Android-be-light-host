@@ -51,7 +51,7 @@ public class HostEditActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        final String html = RequestHttpURLConnection.request("http://15.164.220.47/api/host?_method=PUT", params,true, "POST");
+                        final String html = RequestHttpURLConnection.request("http://121.184.10.219/api/host?_method=PUT", params,true, "POST");
                         runOnUiThread(new Runnable() {
 
                             @Override
