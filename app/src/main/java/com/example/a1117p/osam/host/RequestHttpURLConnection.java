@@ -1,5 +1,8 @@
 package com.example.a1117p.osam.host;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,17 +11,21 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RequestHttpURLConnection {
-    static String cookie="";
-    public static String request(String _url, HashMap<String, String> _params,String method){
-        return request(_url, _params,false,method);
+    static String cookie = "", email = "",name="";
+
+    public static String request(String _url, HashMap<String, String> _params, String method) {
+        return request(_url, _params, false, method);
     }
-    
-    
-    public static String request(String _url, HashMap<String, String> _params,boolean iscookie,String method){
+
+
+    public static String request(String _url, HashMap<String, String> _params, boolean iscookie, String method) {
 
         // HttpURLConnection 참조 변수.
         HttpURLConnection urlConn = null;
@@ -31,7 +38,7 @@ public class RequestHttpURLConnection {
         // 보낼 데이터가 없으면 파라미터를 비운다.
         if (_params == null)
             sbParams.append("");
-        // 보낼 데이터가 있으면 파라미터를 채운다.
+            // 보낼 데이터가 있으면 파라미터를 채운다.
         else {
             // 파라미터가 2개 이상이면 파라미터 연결에 &가 필요하므로 스위칭할 변수 생성.
             boolean isAnd = false;
@@ -39,7 +46,7 @@ public class RequestHttpURLConnection {
             String key;
             String value;
 
-            for(Map.Entry<String, String> parameter : _params.entrySet()){
+            for (Map.Entry<String, String> parameter : _params.entrySet()) {
                 key = parameter.getKey();
                 value = parameter.getValue();
 
@@ -59,51 +66,59 @@ public class RequestHttpURLConnection {
         /**
          * 2. HttpURLConnection을 통해 web의 데이터를 가져온다.
          * */
-        try{
+        try {
             URL url = new URL(_url);
             urlConn = (HttpURLConnection) url.openConnection();
-            
-            if(iscookie&&!cookie.equals("")){
-                   urlConn.setRequestProperty("Cookie", cookie); //쿠키값을 서버에게 전달하는 코드
-                
-                
+
+            if (iscookie && !cookie.equals("")) {
+                urlConn.setRequestProperty("Cookie", cookie); //쿠키값을 서버에게 전달하는 코드
+
+
             }
 
             // [2-1]. urlConn 설정.
             urlConn.setRequestMethod(method); // URL 요청에 대한 메소드 설정 : POST.
             urlConn.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
             urlConn.setRequestProperty("Context_Type", "application/x-www-form-urlencoded;cahrset=UTF-8");
-            if(method.equals("POST")){
-            // [2-2]. parameter 전달 및 데이터 읽어오기.
-            String strParams = sbParams.toString(); //sbParams에 정리한 파라미터들을 스트링으로 저장. 예)id=id1&pw=123;
-            OutputStream os = urlConn.getOutputStream();
-            os.write(strParams.getBytes(StandardCharsets.UTF_8)); // 출력 스트림에 출력.
-            os.flush(); // 출력 스트림을 플러시(비운다)하고 버퍼링 된 모든 출력 바이트를 강제 실행.
-            os.close(); // 출력 스트림을 닫고 모든 시스템 자원을 해제.
+            if (method.equals("POST")) {
+                // [2-2]. parameter 전달 및 데이터 읽어오기.
+                String strParams = sbParams.toString(); //sbParams에 정리한 파라미터들을 스트링으로 저장. 예)id=id1&pw=123;
+                OutputStream os = urlConn.getOutputStream();
+                os.write(strParams.getBytes(Charset.forName("UTF-8"))); // 출력 스트림에 출력.
+                os.flush(); // 출력 스트림을 플러시(비운다)하고 버퍼링 된 모든 출력 바이트를 강제 실행.
+                os.close(); // 출력 스트림을 닫고 모든 시스템 자원을 해제.
             }
             // [2-3]. 연결 요청 확인.
             // 실패 시 null을 리턴하고 메서드를 종료.
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK)
                 return String.valueOf(urlConn.getResponseCode());
 
-            
+
             Map<String, List<String>> header = urlConn.getHeaderFields();
-            if(header.containsKey("Set-Cookie")){
-                cookie="";
+            if (header.containsKey("Set-Cookie")) {
                 List<String> cookies = header.get("Set-Cookie");
-                for(int i=0;i<cookies.size();i++)
-                    cookie+=cookies.get(i);
+                for (int i = 0; i < cookies.size(); i++)
+                    if(cookies.get(i).contains("public_user")){
+                        String tmp = URLDecoder.decode(cookies.get(i).split("=")[1]);
+                        tmp = tmp.replace("; Path","").replace("j:","");
+                        JSONObject object = (JSONObject) new JSONParser().parse(tmp);
+                        name= (String) object.get("userName");
+                        email=(String) object.get("userEmail");
+                    }else if (cookies.get(i).contains("user")) {
+                        cookie = cookies.get(i);
+                    }
             }
+
             // [2-4]. 읽어온 결과물 리턴.
             // 요청한 URL의 출력물을 BufferedReader로 받는다.
-            BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), Charset.forName("UTF-8")));
 
             // 출력물의 라인과 그 합에 대한 변수.
             String line;
             String page = "";
 
             // 라인을 받아와 합친다.
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 page += line;
             }
 
@@ -112,6 +127,8 @@ public class RequestHttpURLConnection {
         } catch (MalformedURLException e) { // for URL.
             e.printStackTrace();
         } catch (IOException e) { // for openConnection().
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         } finally {
             if (urlConn != null)
