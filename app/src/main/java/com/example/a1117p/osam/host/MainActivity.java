@@ -1,10 +1,12 @@
 package com.example.a1117p.osam.host;
 
 
-import android.content.Intent;
+import android.app.Dialog;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,50 +15,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.register_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,RegisterActivity.class);
-                startActivity(i);
+            public void onClick(View v) {
+                Dialog dialog = new ResvtnClickDialog(MainActivity.this);
+                dialog.show();
             }
         });
-        findViewById(R.id.login_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.host_btn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(i);
-            }
-        });
-        findViewById(R.id.profile_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,ProfileActivity.class);
-                startActivity(i);
-            }
-        });
-        findViewById(R.id.delete_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,DeleteUserActivity.class);
-                startActivity(i);
-            }
-        });
-        findViewById(R.id.host_reg_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,HostRegisterActivity.class);
-                startActivity(i);
-            }
-        });
-        findViewById(R.id.host_mgt_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,HostMgtActivity.class);
-                startActivity(i);
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "뭐하는 버튼이지;;", Toast.LENGTH_LONG).show();
             }
         });
     }
-
 
 
 }

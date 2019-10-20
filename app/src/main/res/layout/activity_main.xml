@@ -60,7 +60,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/recipt_btn"
+                    android:id="@+id/host_btn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -69,7 +69,7 @@
                     android:minHeight="0dp"
                     android:paddingLeft="50dp"
                     android:paddingRight="50dp"
-                    android:text="예약"
+                    android:text="호스트"
                     android:textColor="@color/w" />
 
                 <Button
