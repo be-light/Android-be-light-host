@@ -54,7 +54,7 @@ public class HostClickDialog extends Dialog {
                         final HashMap params = new HashMap<String, String>();
 
                         params.put("hostIdx", item.getIdx());
-                        final String html = RequestHttpURLConnection.request("http://121.184.10.219/api/host?_method=DELETE", params,true, "POST");
+                        final String html = RequestHttpURLConnection.request("https://be-light.store/api/host?_method=DELETE", params,true, "POST");
                         activity.runOnUiThread(new Runnable() {
 
                             @Override

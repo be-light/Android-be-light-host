@@ -2,12 +2,21 @@ package com.example.a1117p.osam.host;
 
 
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import java.util.*;
+import java.util.regex.Pattern;
+
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -15,7 +24,9 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        
+        final String pwPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{9,}$",emailPattern="^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$",phonePattern="^(\\d{3}|\\d{4})[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$";
+
+
         findViewById(R.id.register_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -25,34 +36,53 @@ public class RegisterActivity extends AppCompatActivity {
                 String passwd_confirm = ((EditText)findViewById(R.id.passwd_confirm)).getText().toString();
                 String email = ((EditText)findViewById(R.id.email)).getText().toString();
                 String phone = ((EditText)findViewById(R.id.phone)).getText().toString();
-                if(id.equals("")){
-                    Toast.makeText(RegisterActivity.this,"ID를 입력하세요",Toast.LENGTH_LONG).show();
+                if (id.equals("")) {
+                    Toast.makeText(RegisterActivity.this, "ID를 입력하세요", Toast.LENGTH_LONG).show();
+                    return;
+                } else if (id.length() < 4) {
+                    Toast.makeText(RegisterActivity.this, "ID가 너무 짧습니다.", Toast.LENGTH_LONG).show();
+                    return;
+                } else if (name.equals("")) {
+                    Toast.makeText(RegisterActivity.this, "이름을 입력하세요", Toast.LENGTH_LONG).show();
+                    return;
+                } else if (passwd.equals("")) {
+                    Toast.makeText(RegisterActivity.this, "비밀번호를 입력하세요", Toast.LENGTH_LONG).show();
+                    return;
+                } else if (!Pattern.compile(pwPattern).matcher(passwd).matches()) {
+                    new AlertDialog.Builder(RegisterActivity.this).setMessage("비밀번호는 영문자,숫자,특수문자를 1개 이상씩 포함하여 9자리 이상이여야 합니다.")
+                            .setNeutralButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).create().show();
+
+                    return;
+                } else if (passwd_confirm.equals("")) {
+                    Toast.makeText(RegisterActivity.this, "비밀번호확인을 입력하세요", Toast.LENGTH_LONG).show();
+                    return;
+                } else if (!passwd.equals(passwd_confirm)) {
+                    Toast.makeText(RegisterActivity.this, "비밀번호와 비밀번호 확인이 같지않습니다.", Toast.LENGTH_LONG).show();
+                    return;
+                } else if (email.equals("")) {
+                    Toast.makeText(RegisterActivity.this, "이메일을 입력하세요", Toast.LENGTH_LONG).show();
+                    return;
+                } else if (!Pattern.compile(emailPattern).matcher(email).matches()) {
+
+                    Toast.makeText(RegisterActivity.this, "이메일의 형식이 정상적이지 않습니다.", Toast.LENGTH_LONG).show();
+                    return;
+                }else if (phone.equals("")) {
+                    Toast.makeText(RegisterActivity.this, "전화번호를 입력하세요", Toast.LENGTH_LONG).show();
+                    return;
+                }else if (!Pattern.compile(phonePattern).matcher(phone).matches()) {
+
+                    Toast.makeText(RegisterActivity.this, "전화번호의 형식이 정상적이지 않습니다.", Toast.LENGTH_LONG).show();
                     return;
                 }
-                else if(name.equals("")){
-                    Toast.makeText(RegisterActivity.this,"이름을 입력하세요",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(passwd.equals("")){
-                    Toast.makeText(RegisterActivity.this,"비밀번호를 입력하세요",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(passwd_confirm.equals("")){
-                    Toast.makeText(RegisterActivity.this,"비밀번호확인을 입력하세요",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(!passwd.equals(passwd_confirm)){
-                    Toast.makeText(RegisterActivity.this,"비밀번호와 비밀번호 확인이 같지않습니다.",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(email.equals("")){
-                    Toast.makeText(RegisterActivity.this,"이메일을 입력하세요",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(phone.equals("")){
-                    Toast.makeText(RegisterActivity.this,"전화번호를 입력하세요",Toast.LENGTH_LONG).show();
-                    return;
-                }
+                final ProgressDialog dialog = new ProgressDialog(RegisterActivity.this);
+                dialog.setMessage("회원가입 중 입니다.");
+
+                dialog.show();
                 final HashMap params = new HashMap<String, String>(); 
                 
                 params.put("hostUserId",id);
@@ -63,14 +93,26 @@ public class RegisterActivity extends AppCompatActivity {
                 new Thread(new Runnable(){
                     @Override
                     public void run() {
-                        final String html = RequestHttpURLConnection.request("http://121.184.10.219/api/hoster/register",params,"POST");
+                        final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/register",params,"POST");
                         runOnUiThread(new Runnable(){
                             
                             @Override
                             public void run() {
-                                
-                                Toast.makeText(RegisterActivity.this,html,Toast.LENGTH_LONG).show();
-                            }
+                                dialog.dismiss();
+                                JSONParser parser = new JSONParser();
+                                try {
+                                    JSONObject object = (JSONObject) parser.parse(html);
+                                    Long status = (Long) object.get("status");
+                                    if (status == 200) {
+                                        Toast.makeText(RegisterActivity.this, "회원가입에 성공하였습니다.", Toast.LENGTH_LONG).show();
+                                        finish();
+                                    } else {
+                                        Toast.makeText(RegisterActivity.this, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(RegisterActivity.this, "에러가 발생하였습니다.", Toast.LENGTH_LONG).show();
+                                }    }
                             
                         });
                         
