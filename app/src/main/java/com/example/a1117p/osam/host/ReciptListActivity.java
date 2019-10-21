@@ -2,7 +2,6 @@ package com.example.a1117p.osam.host;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -11,10 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
-import java.util.HashMap;
-
 public class ReciptListActivity extends AppCompatActivity {
-ListView listView;
+    ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,17 +22,16 @@ ListView listView;
         final ProgressDialog Pdialog = new ProgressDialog(this);
         Pdialog.setMessage("예약내역을 불러오는 중입니다.");
 
-        /*Pdialog.show();
+        Pdialog.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final HashMap params = new HashMap<String, String>();
 
                 try {
-                    final String html = RequestHttpURLConnection.request("https://be-light.store/api/reviews?hostIdx=" + data.hostIdx, params, true, "GET");
+                    final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/order/pending?statusCode=0", null, true, "GET");
                     JSONParser jsonParser = new JSONParser();
                     JSONArray jsonArray = (JSONArray) jsonParser.parse(html);
-                    final ReciptListAdapter adapter = new ReciptListAdapter(jsonArray);
+                    final ReciptListAdapter adapter = new ReciptListAdapter(jsonArray, ReciptListActivity.this);
                     runOnUiThread(new Runnable() {
 
                         @Override
@@ -58,6 +55,6 @@ ListView listView;
                 }
 
             }
-        }).start();*/
+        }).start();
     }
 }

@@ -91,7 +91,7 @@ public class SplashActivity extends AppCompatActivity {
                                                 editor.apply();
 
 
-                                                Intent i = new Intent(SplashActivity.this, MapActivity.class);
+                                                Intent i = new Intent(SplashActivity.this, MainActivity.class);
                                                 startActivity(i);
                                                 finish();
                                             } else {
@@ -171,7 +171,7 @@ public class SplashActivity extends AppCompatActivity {
                                     if (status == 200) {
 
 
-                                        Intent i = new Intent(SplashActivity.this, MapActivity.class);
+                                        Intent i = new Intent(SplashActivity.this, MainActivity.class);
                                         startActivity(i);
                                         finish();
                                     } else {

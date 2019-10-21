@@ -83,8 +83,8 @@ public class RegisterActivity extends AppCompatActivity {
                 dialog.setMessage("회원가입 중 입니다.");
 
                 dialog.show();
-                final HashMap params = new HashMap<String, String>(); 
-                
+                final HashMap params = new HashMap<String, String>();
+
                 params.put("hostUserId",id);
                 params.put("hostUserName",name);
                 params.put("hostUserPassword",passwd);

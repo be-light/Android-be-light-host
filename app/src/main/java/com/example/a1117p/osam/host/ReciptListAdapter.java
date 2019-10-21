@@ -1,5 +1,7 @@
 package com.example.a1117p.osam.host;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -14,26 +16,29 @@ import android.widget.Toast;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 
 public class ReciptListAdapter extends BaseAdapter {
-    ArrayList<ReciptListItem> reviews = new ArrayList<>();
+    ArrayList<ReciptListItem> recipts = new ArrayList<>();
+    Activity context;
 
-    ReciptListAdapter(JSONArray jsonArray) {
+    ReciptListAdapter(JSONArray jsonArray, Activity context) {
         for (Object object : jsonArray) {
-            reviews.add(new ReciptListItem((JSONObject) object));
+            recipts.add(new ReciptListItem((JSONObject) object));
         }
+        this.context=context;
     }
 
     @Override
     public int getCount() {
-        return reviews.size();
+        return recipts.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return reviews.get(position);
+        return recipts.get(position);
     }
 
     @Override
@@ -42,8 +47,7 @@ public class ReciptListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final Context context = parent.getContext();
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
@@ -57,7 +61,7 @@ public class ReciptListAdapter extends BaseAdapter {
         TextView term = convertView.findViewById(R.id.term);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        ReciptListItem listViewItem = reviews.get(position);
+        final ReciptListItem listViewItem = recipts.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
         name.setText(listViewItem.getUsername());
@@ -69,13 +73,99 @@ public class ReciptListAdapter extends BaseAdapter {
         convertView.findViewById(R.id.accept_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "미구현", Toast.LENGTH_LONG).show();
+                final ProgressDialog Pdialog = new ProgressDialog(context);
+                Pdialog.setMessage("예약을 승인 중입니다.");
+
+                Pdialog.show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/order/pending?statusCode=?_method=PUT&accept=1&reciptNumber="+listViewItem.getRecipt_no() , null, true, "GET");
+
+                            JSONParser parser = new JSONParser();
+                            final JSONObject object = (JSONObject) parser.parse(html);
+                            context.runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    Pdialog.dismiss();
+                                    Long status = (Long) object.get("status");
+                                    if (status == 200) {
+                                        Toast.makeText(context, "성공하였습니다.", Toast.LENGTH_LONG).show();
+
+                                    } else {
+                                        Toast.makeText(context, "실패하였습니다.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                            });
+
+                        } catch (final Exception e) {
+                            context.runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+
+                            });
+                        }
+
+                    }
+                }).start();
             }
         });
         convertView.findViewById(R.id.decline_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "미구현", Toast.LENGTH_LONG).show();
+                final ProgressDialog Pdialog = new ProgressDialog(context);
+                Pdialog.setMessage("예약을 거절 중입니다.");
+
+                Pdialog.show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/order/pending?statusCode=?_method=PUT&accept=0&reciptNumber="+listViewItem.getRecipt_no() , null, true, "GET");
+
+                            JSONParser parser = new JSONParser();
+                            final JSONObject object = (JSONObject) parser.parse(html);
+                            context.runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    Pdialog.dismiss();
+                                    Long status = (Long) object.get("status");
+                                    if (status == 200) {
+                                        Toast.makeText(context, "성공하였습니다.", Toast.LENGTH_LONG).show();
+
+                                    } else {
+                                        Toast.makeText(context, "실패하였습니다.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                            });
+
+                        } catch (final Exception e) {
+                            context.runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+
+                            });
+                        }
+
+                    }
+                }).start();
             }
         });
         OvalProfile(convertView);

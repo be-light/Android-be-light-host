@@ -98,13 +98,13 @@ public class RequestHttpURLConnection {
             if (header.containsKey("Set-Cookie")) {
                 List<String> cookies = header.get("Set-Cookie");
                 for (int i = 0; i < cookies.size(); i++)
-                    if(cookies.get(i).contains("public_user")){
+                    if(cookies.get(i).contains("public_hostuser")){
                         String tmp = URLDecoder.decode(cookies.get(i).split("=")[1]);
                         tmp = tmp.replace("; Path","").replace("j:","");
                         JSONObject object = (JSONObject) new JSONParser().parse(tmp);
-                        name= (String) object.get("userName");
-                        email=(String) object.get("userEmail");
-                    }else if (cookies.get(i).contains("user")) {
+                        name= (String) object.get("hostUserName");
+                        email=(String) object.get("hostUserEmail");
+                    }else if (cookies.get(i).contains("host")) {
                         cookie = cookies.get(i);
                     }
             }
