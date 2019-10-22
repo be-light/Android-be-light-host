@@ -3,6 +3,7 @@ package com.example.a1117p.osam.host;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
@@ -19,6 +20,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ReciptListAdapter extends BaseAdapter {
     ArrayList<ReciptListItem> recipts = new ArrayList<>();
@@ -28,7 +30,7 @@ public class ReciptListAdapter extends BaseAdapter {
         for (Object object : jsonArray) {
             recipts.add(new ReciptListItem((JSONObject) object));
         }
-        this.context=context;
+        this.context = context;
     }
 
     @Override
@@ -59,6 +61,7 @@ public class ReciptListAdapter extends BaseAdapter {
         TextView name = convertView.findViewById(R.id.name);
         TextView itemCount = convertView.findViewById(R.id.itemCount);
         TextView term = convertView.findViewById(R.id.term);
+        TextView paid = convertView.findViewById(R.id.paid);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         final ReciptListItem listViewItem = recipts.get(position);
@@ -68,106 +71,133 @@ public class ReciptListAdapter extends BaseAdapter {
         StringBuilder termSB = new StringBuilder();
         termSB.append(listViewItem.getDrop_date() + "~" + listViewItem.getPick_date());
         term.setText(termSB);
-        itemCount.setText(listViewItem.getItemCount() + "");
+        itemCount.setText(listViewItem.getItemCount() + "개의 짐");
+        paid.setText(listViewItem.getPaid() + "원");
+        if (listViewItem.getStatusCode() == 1) {
+            convertView.findViewById(R.id.select).setVisibility(View.GONE);
+            convertView.findViewById(R.id.store_btn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentIntegrator integrator = new IntentIntegrator(this);
+                    integrator.setBeepEnabled(false);
+                    integrator.setCaptureActivity(CustomScannerActivity.class);
+                    integrator.initiateScan();
 
-        convertView.findViewById(R.id.accept_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final ProgressDialog Pdialog = new ProgressDialog(context);
-                Pdialog.setMessage("예약을 승인 중입니다.");
 
-                Pdialog.show();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+                }
+            });
+        } else {
+            convertView.findViewById(R.id.store_btn).setVisibility(View.GONE);
+            convertView.findViewById(R.id.accept_btn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final ProgressDialog Pdialog = new ProgressDialog(context);
+                    Pdialog.setMessage("예약을 승인 중입니다.");
 
-                        try {
-                            final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/order/pending?statusCode=?_method=PUT&accept=1&reciptNumber="+listViewItem.getRecipt_no() , null, true, "GET");
+                    Pdialog.show();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                            JSONParser parser = new JSONParser();
-                            final JSONObject object = (JSONObject) parser.parse(html);
-                            context.runOnUiThread(new Runnable() {
+                            try {
+                                final HashMap<String, String> params = new HashMap<>();
 
-                                @Override
-                                public void run() {
+                                params.put("accept", "1");
+                                params.put("userId", listViewItem.getUsername());
+                                params.put("reciptNumber", listViewItem.getRecipt_no() + "");
+                                final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/order?_method=PUT", params, true, "POST");
 
-                                    Pdialog.dismiss();
-                                    Long status = (Long) object.get("status");
-                                    if (status == 200) {
-                                        Toast.makeText(context, "성공하였습니다.", Toast.LENGTH_LONG).show();
+                                JSONParser parser = new JSONParser();
+                                final JSONObject object = (JSONObject) parser.parse(html);
+                                context.runOnUiThread(new Runnable() {
 
-                                    } else {
-                                        Toast.makeText(context, "실패하였습니다.", Toast.LENGTH_LONG).show();
+                                    @Override
+                                    public void run() {
+
+                                        Pdialog.dismiss();
+                                        Long status = (Long) object.get("status");
+                                        if (status == 200) {
+                                            Toast.makeText(context, "성공하였습니다.", Toast.LENGTH_LONG).show();
+                                            context.startActivity(new Intent(context, ReciptListActivity.class));
+                                            context.finish();
+                                        } else {
+                                            Toast.makeText(context, "실패하였습니다.", Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                }
 
-                            });
+                                });
 
-                        } catch (final Exception e) {
-                            context.runOnUiThread(new Runnable() {
+                            } catch (final Exception e) {
+                                context.runOnUiThread(new Runnable() {
 
-                                @Override
-                                public void run() {
+                                    @Override
+                                    public void run() {
 
-                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-
-                            });
-                        }
-
-                    }
-                }).start();
-            }
-        });
-        convertView.findViewById(R.id.decline_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final ProgressDialog Pdialog = new ProgressDialog(context);
-                Pdialog.setMessage("예약을 거절 중입니다.");
-
-                Pdialog.show();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-                            final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/order/pending?statusCode=?_method=PUT&accept=0&reciptNumber="+listViewItem.getRecipt_no() , null, true, "GET");
-
-                            JSONParser parser = new JSONParser();
-                            final JSONObject object = (JSONObject) parser.parse(html);
-                            context.runOnUiThread(new Runnable() {
-
-                                @Override
-                                public void run() {
-
-                                    Pdialog.dismiss();
-                                    Long status = (Long) object.get("status");
-                                    if (status == 200) {
-                                        Toast.makeText(context, "성공하였습니다.", Toast.LENGTH_LONG).show();
-
-                                    } else {
-                                        Toast.makeText(context, "실패하였습니다.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
                                     }
-                                }
 
-                            });
+                                });
+                            }
 
-                        } catch (final Exception e) {
-                            context.runOnUiThread(new Runnable() {
-
-                                @Override
-                                public void run() {
-
-                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-
-                            });
                         }
+                    }).start();
+                }
+            });
+            convertView.findViewById(R.id.decline_btn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final ProgressDialog Pdialog = new ProgressDialog(context);
+                    Pdialog.setMessage("예약을 거절 중입니다.");
 
-                    }
-                }).start();
-            }
-        });
+                    Pdialog.show();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                final HashMap<String, String> params = new HashMap<>();
+
+                                params.put("accept", "-1");
+                                params.put("reciptNumber", listViewItem.getRecipt_no() + "");
+                                final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/order?_method=PUT", params, true, "POST");
+
+                                JSONParser parser = new JSONParser();
+                                final JSONObject object = (JSONObject) parser.parse(html);
+                                context.runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+
+                                        Pdialog.dismiss();
+                                        Long status = (Long) object.get("status");
+                                        if (status == 200) {
+                                            Toast.makeText(context, "성공하였습니다.", Toast.LENGTH_LONG).show();
+                                            context.startActivity(new Intent(context, ReciptListActivity.class));
+                                            context.finish();
+                                        } else {
+                                            Toast.makeText(context, "실패하였습니다.", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                });
+
+                            } catch (final Exception e) {
+                                context.runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+
+                                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+
+                                });
+                            }
+
+                        }
+                    }).start();
+                }
+            });
+        }
         OvalProfile(convertView);
         return convertView;
     }

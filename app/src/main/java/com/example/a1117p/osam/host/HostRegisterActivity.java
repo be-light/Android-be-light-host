@@ -29,14 +29,15 @@ public class HostRegisterActivity extends AppCompatActivity {
                 } else if (tel.equals("")) {
                     Toast.makeText(HostRegisterActivity.this, "전화번호를 입력하세요", Toast.LENGTH_LONG).show();
                     return;
-                }else if (address.equals("")) {
+                } else if (address.equals("")) {
                     Toast.makeText(HostRegisterActivity.this, "주소를 입력하세요", Toast.LENGTH_LONG).show();
                     return;
-                }else if (postalCode.equals("")) {
+                } else if (postalCode.equals("")) {
                     Toast.makeText(HostRegisterActivity.this, "우편번호를 입력하세요", Toast.LENGTH_LONG).show();
                     return;
                 }
-                final HashMap params = new HashMap<String, String>();
+
+                final HashMap<String, String> params = new HashMap<>();
 
                 params.put("hostName", name);
                 params.put("hostTel", tel);
@@ -46,7 +47,7 @@ public class HostRegisterActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        final String html = RequestHttpURLConnection.request("https://be-light.store/api/host", params,true, "POST");
+                        final String html = RequestHttpURLConnection.request("https://be-light.store/api/host", params, true, "POST");
                         runOnUiThread(new Runnable() {
 
                             @Override

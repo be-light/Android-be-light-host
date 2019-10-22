@@ -38,8 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="가게명"
-                android:textSize="20sp" />
+                android:text="가게명" />
 
             <EditText
                 android:id="@+id/hostname"
@@ -65,8 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="가게주소"
-                android:textSize="20sp" />
+                android:text="가게주소" />
 
             <EditText
                 android:id="@+id/hostaddr"
@@ -91,8 +89,32 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="가게번호"
-                android:textSize="20sp" />
+                android:text="우편번호" />
+
+            <EditText
+                android:id="@+id/postalcode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="우편번호를 입력하세요"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/stadiumview"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="가게번호" />
 
             <EditText
                 android:id="@+id/hosttel"
@@ -117,8 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="오픈시간"
-                android:textSize="20sp" />
+                android:text="오픈시간" />
 
             <Button
                 android:id="@+id/openTime"
@@ -142,8 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="마감시간"
-                android:textSize="20sp" />
+                android:text="마감시간" />
 
 
             <Button
@@ -151,8 +171,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:minHeight="0dp"
                 android:background="@null"
+                android:minHeight="0dp"
                 android:text="클릭" />
         </LinearLayout>
 
@@ -169,6 +189,7 @@
             android:scrollHorizontally="false" />
 
         <LinearLayout
+            android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -183,10 +204,9 @@
 
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/stadiumbutton"
+                android:background="@drawable/stadiumbutton_slim"
                 android:text="취소"
-                android:textColor="@color/w"
-                android:textSize="20sp" />
+                android:textColor="@color/w" />
 
             <Button
                 android:id="@+id/add_btn"
@@ -195,10 +215,41 @@
 
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/stadiumbutton"
+                android:background="@drawable/stadiumbutton_slim"
                 android:text="등록"
-                android:textColor="@color/w"
-                android:textSize="20sp" />
+                android:textColor="@color/w" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/delete_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/stadiumbutton_slim"
+                android:text="삭제"
+                android:textColor="@color/w" />
+
+            <Button
+                android:id="@+id/edit_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/stadiumbutton_slim"
+                android:text="수정"
+                android:textColor="@color/w" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

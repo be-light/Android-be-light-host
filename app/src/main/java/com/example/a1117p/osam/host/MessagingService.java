@@ -53,7 +53,7 @@ public class MessagingService extends FirebaseMessagingService {
                 assert notificationManager != null;
                 notificationManager.createNotificationChannel(channel);
 
-            }else builder.setSmallIcon(R.mipmap.ic_launcher);
+            }else builder.setSmallIcon(R.drawable.logo);
 
             assert notificationManager != null;
             notificationManager.notify(9999, builder.build());

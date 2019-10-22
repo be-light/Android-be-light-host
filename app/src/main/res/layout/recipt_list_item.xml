@@ -11,9 +11,9 @@
     android:paddingBottom="10dp">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
         android:id="@+id/profile_img"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/cat" />
 
     <LinearLayout
@@ -28,11 +28,25 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp" />
 
-        <TextView
-            android:id="@+id/itemCount"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/itemCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/paid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/term"
@@ -43,9 +57,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -56,9 +72,10 @@
                     android:id="@+id/accept_btn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/stadiumbutton"
+                    android:background="@drawable/stadiumbutton_slim"
+                    android:minHeight="0dp"
                     android:text="승인"
                     android:textColor="@color/w"
                     android:textSize="20sp" />
@@ -67,13 +84,23 @@
                     android:id="@+id/decline_btn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/stadiumbutton"
+                    android:background="@drawable/stadiumbutton_slim"
+                    android:minHeight="0dp"
                     android:text="거절"
                     android:textColor="@color/w"
                     android:textSize="20sp" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/store_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/stadiumbutton_slim"
+                android:text="짐맡기기"
+                android:textColor="@color/w" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

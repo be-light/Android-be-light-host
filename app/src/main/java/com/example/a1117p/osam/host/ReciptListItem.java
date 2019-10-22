@@ -8,14 +8,16 @@ import java.util.Date;
 
 public class ReciptListItem {
     private String username, drop_date, pick_date;
-    private long recipt_no, itemCount;
+    private long recipt_no, itemCount,paid,statusCode;
 
     ReciptListItem(JSONObject object) {
-        username = String.valueOf(object.get("username"));
-        drop_date = (String) object.get("drop_date");
-        pick_date = (String) object.get("pick_date");
-        recipt_no = (Long) object.get("recipt_no");
+        username = String.valueOf(object.get("userId"));
+        drop_date = (String) object.get("checkIn");
+        pick_date = (String) object.get("checkOut");
+        recipt_no = (Long) object.get("reciptNumber");
         itemCount = (Long) object.get("itemCount");
+        paid = (Long) object.get("paid");
+        statusCode=(Long) object.get("statusCode");
         try {
             SimpleDateFormat from, to;
             from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -48,5 +50,13 @@ public class ReciptListItem {
 
     public String getPick_date() {
         return pick_date;
+    }
+
+    public long getPaid() {
+        return paid;
+    }
+
+    public long getStatusCode() {
+        return statusCode;
     }
 }

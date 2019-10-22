@@ -14,11 +14,13 @@ import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter {
     ArrayList<HostListItem> hosts = new ArrayList<>();
-    ListViewAdapter(JSONArray jsonArray){
-        for(Object object:jsonArray){
+
+    ListViewAdapter(JSONArray jsonArray) {
+        for (Object object : jsonArray) {
             hosts.add(new HostListItem((JSONObject) object));
         }
     }
+
     @Override
     public int getCount() {
         return hosts.size();
@@ -45,21 +47,21 @@ public class ListViewAdapter extends BaseAdapter {
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-        TextView idx = convertView.findViewById(R.id.idx) ;
-        TextView name = convertView.findViewById(R.id.name) ;
-        TextView tel = convertView.findViewById(R.id.tel) ;
-        TextView address = convertView.findViewById(R.id.address) ;
-        TextView postalcode = convertView.findViewById(R.id.postalcode) ;
+        TextView name = convertView.findViewById(R.id.host_name);
+        TextView tel = convertView.findViewById(R.id.host_num);
+        TextView address = convertView.findViewById(R.id.hostaddr);
+        TextView postalcode = convertView.findViewById(R.id.host_postal);
+        TextView term = convertView.findViewById(R.id.term);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         HostListItem listViewItem = hosts.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
-        idx.setText("인덱스 : "+listViewItem.getIdx());
-        name.setText("호스트명 : "+listViewItem.getName());
-        tel.setText("전화번호 : "+listViewItem.getTel());
-        address.setText("주소 : "+listViewItem.getAddress());
-        postalcode.setText("우편주소 : "+listViewItem.getPostalCode());
+        name.setText(listViewItem.getName());
+        tel.setText(listViewItem.getTel());
+        address.setText(listViewItem.getAddress());
+        postalcode.setText(listViewItem.getPostalCode());
+        term.setText("open  " + listViewItem.getOpenTime() + " ~ close  " + listViewItem.getCloseTime());
 
         return convertView;
     }
