@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.simple.JSONArray;
@@ -56,6 +57,10 @@ public class ListViewAdapter extends BaseAdapter {
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         HostListItem listViewItem = hosts.get(position);
 
+        if(listViewItem.getHostImage()!=null&&!listViewItem.getHostImage().equals("")){
+            new DownloadImageTask((ImageView) convertView.findViewById(R.id.host_img))
+                    .execute(listViewItem.getHostImage());
+        }
         // 아이템 내 각 위젯에 데이터 반영
         name.setText(listViewItem.getName());
         tel.setText(listViewItem.getTel());

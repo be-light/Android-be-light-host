@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,6 +27,8 @@ import java.util.HashMap;
 public class ReciptListAdapter extends BaseAdapter {
     ArrayList<ReciptListItem> recipts = new ArrayList<>();
     Activity context;
+    static String userId;
+    static long reciptNo;
 
     ReciptListAdapter(JSONArray jsonArray, Activity context) {
         for (Object object : jsonArray) {
@@ -78,9 +82,12 @@ public class ReciptListAdapter extends BaseAdapter {
             convertView.findViewById(R.id.store_btn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentIntegrator integrator = new IntentIntegrator(this);
-                    integrator.setBeepEnabled(false);
-                    integrator.setCaptureActivity(CustomScannerActivity.class);
+                    userId= listViewItem.getUsername();
+                    reciptNo=listViewItem.getRecipt_no();
+                    IntentIntegrator integrator = new IntentIntegrator(context);
+                    integrator.setCaptureActivity(CaptureActivityAnyOrientation.class);
+                    integrator.setOrientationLocked(false);
+                    integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
                     integrator.initiateScan();
 
 
@@ -103,7 +110,6 @@ public class ReciptListAdapter extends BaseAdapter {
                                 final HashMap<String, String> params = new HashMap<>();
 
                                 params.put("accept", "1");
-                                params.put("userId", listViewItem.getUsername());
                                 params.put("reciptNumber", listViewItem.getRecipt_no() + "");
                                 final String html = RequestHttpURLConnection.request("https://be-light.store/api/hoster/order?_method=PUT", params, true, "POST");
 

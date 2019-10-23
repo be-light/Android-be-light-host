@@ -98,8 +98,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stadiumbutton_slim"
+                android:minHeight="0dp"
                 android:text="짐맡기기"
-                android:textColor="@color/w" />
+                android:textColor="@color/w"
+                android:textSize="20sp" />
 
         </LinearLayout>
     </LinearLayout>

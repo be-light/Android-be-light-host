@@ -17,7 +17,7 @@ public class HostListItem implements Parcelable {
             return new HostListItem[size];
         }
     };
-    private String name, tel, address, postalCode, idx, openTime, closeTime, intro;
+    private String name, tel, address, postalCode, idx, openTime, closeTime, intro,hostImage;
 
     HostListItem(JSONObject object) {
         idx = String.valueOf(object.get("hostIdx"));
@@ -28,6 +28,10 @@ public class HostListItem implements Parcelable {
         openTime = (String) object.get("hostOpenTime");
         closeTime = (String) object.get("hostCloseTime");
         intro = (String) object.get("hostIntro");
+
+        hostImage = (String) object.get("hostImage");
+        if(hostImage!=null&&!hostImage.equals(""))
+            hostImage="https://be-light.store"+hostImage;
     }
 
     protected HostListItem(Parcel in) {
@@ -83,5 +87,9 @@ public class HostListItem implements Parcelable {
 
     public String getIntro() {
         return intro;
+    }
+
+    public String getHostImage() {
+        return hostImage;
     }
 }

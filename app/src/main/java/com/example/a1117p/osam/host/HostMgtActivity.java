@@ -1,5 +1,7 @@
 package com.example.a1117p.osam.host;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
+
+import java.io.File;
+import java.net.URISyntaxException;
 
 public class HostMgtActivity extends AppCompatActivity {
     ListView listView;
@@ -59,4 +64,6 @@ public class HostMgtActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

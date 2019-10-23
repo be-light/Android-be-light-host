@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -20,15 +23,22 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class HostRegisterDialog extends Dialog {
     Activity context;
     Button openTime, closeTime;
     boolean isReg = true;
     HostListItem item;
+    public File file=null;
+    ImageView img;
 
     public HostRegisterDialog(@NonNull Activity activity) {
         super(activity);
@@ -65,6 +75,17 @@ public class HostRegisterDialog extends Dialog {
                         }, 0, 0, true);
                 picker.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 picker.show();
+            }
+        });
+        img = findViewById(R.id.host_img);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                context.startActivityForResult(intent, 0);
             }
         });
         closeTime = findViewById(R.id.closeTime);
@@ -158,7 +179,7 @@ public class HostRegisterDialog extends Dialog {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            final String html = RequestHttpURLConnection.request("https://be-light.store/api/host", params, true, "POST");
+                            final String html = RequestHttpURLConnection.requestWithFile("https://be-light.store/api/host", params, true, "POST",file,"hostImage");
                             context.runOnUiThread(new Runnable() {
 
                                 @Override

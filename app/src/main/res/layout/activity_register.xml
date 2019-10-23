@@ -30,12 +30,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingTop="50dp">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/logo_simple"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/logo_simple" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -70,7 +71,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="ID"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/b" />
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_gray" />
 
                     <EditText
                         android:id="@+id/id"
@@ -94,7 +101,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="이름"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/b" />
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_gray" />
 
                     <EditText
                         android:id="@+id/name"
@@ -118,7 +131,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="비밀번호"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/b" />
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_gray" />
 
                     <EditText
                         android:id="@+id/passwd"
@@ -135,14 +154,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/stadiumview"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:textColor="@color/b">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="비밀번호확인"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/b" />
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_gray" />
 
                     <EditText
                         android:id="@+id/passwd_confirm"
@@ -166,7 +192,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="이메일"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/b" />
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_gray" />
 
                     <EditText
                         android:id="@+id/email"
@@ -190,7 +222,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="전화번호"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/b" />
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_gray" />
 
                     <EditText
                         android:id="@+id/phone"
