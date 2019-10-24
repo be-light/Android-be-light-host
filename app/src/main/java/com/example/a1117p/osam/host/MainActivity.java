@@ -1,7 +1,6 @@
 package com.example.a1117p.osam.host;
 
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     long backKeyClickTime = 0;
     ImageView profile;
     HostRegisterDialog hostdialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,12 +88,6 @@ public class MainActivity extends AppCompatActivity {
                 hostdialog.show();
             }
         });
-        findViewById(R.id.host_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "뭐하는 버튼이지;;", Toast.LENGTH_LONG).show();
-            }
-        });
         findViewById(R.id.profile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 RequestHttpURLConnection.cookie = "";
+                MySharedPreferences.removeIdPw();
                 Toast.makeText(MainActivity.this, "로그아웃되었습니다.", Toast.LENGTH_LONG).show();
                 Intent i = new Intent(MainActivity.this, SplashActivity.class);
                 i.putExtra("needLoading", false);
@@ -167,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -175,14 +171,13 @@ public class MainActivity extends AppCompatActivity {
                 Uri uri = data.getData();
                 String path = null;
                 try {
-                    path = PathUtil.getPath(this,uri);
+                    path = PathUtil.getPath(this, uri);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
                 hostdialog.file = new File(path);
                 hostdialog.img.setImageURI(uri);
-            } else if (resultCode == RESULT_CANCELED) {
-              }
+            }
         }
     }
 
@@ -191,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         super.onResume();
+        if(hostdialog!=null&&hostdialog.isShowing())
+            return;
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage("호스트들을 불러오는 중 입니다.");
 

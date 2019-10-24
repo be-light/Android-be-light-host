@@ -27,7 +27,7 @@ public class MessagingService extends FirebaseMessagingService {
         if (data.size() > 0) {
             NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
-            Intent notificationIntent = new Intent(this, MainActivity.class);
+            Intent notificationIntent = new Intent(this, SplashActivity.class);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK) ;
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,  PendingIntent.FLAG_UPDATE_CURRENT);
 

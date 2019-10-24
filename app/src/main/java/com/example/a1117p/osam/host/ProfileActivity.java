@@ -32,12 +32,31 @@ import java.util.regex.Pattern;
 public class ProfileActivity extends AppCompatActivity {
     File file = null;
     ImageView profile;
+    String path = null;
 
     void OvalProfile() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             profile.setBackground(new ShapeDrawable(new OvalShape()));
             profile.setClipToOutline(true);
         }
+    }
+
+    void setProfileImg() {
+        if (MySharedPreferences.getProfileImgPath() != null) {
+            File imgFile = new File(MySharedPreferences.getProfileImgPath());
+
+            if (imgFile.exists()) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                profile.setImageBitmap(myBitmap);
+            }
+        }
+        OvalProfile();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setProfileImg();
     }
 
     @Override
@@ -52,14 +71,6 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.show();
 
         profile = findViewById(R.id.profile_img);
-        if(MySharedPreferences.getProfileImgPath()!=null){
-            File imgFile = new  File(MySharedPreferences.getProfileImgPath());
-
-            if(imgFile.exists()){
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                profile.setImageBitmap(myBitmap);
-            }
-        }
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +80,6 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         });
-        OvalProfile();
 
         new Thread(new Runnable() {
             @Override
@@ -128,6 +138,10 @@ public class ProfileActivity extends AppCompatActivity {
 
                     Toast.makeText(ProfileActivity.this, "전화번호의 형식이 정상적이지 않습니다.", Toast.LENGTH_LONG).show();
                     return;
+                } else if (file == null) {
+
+                    Toast.makeText(ProfileActivity.this, "프로필사진을 변경해주세요", Toast.LENGTH_LONG).show();
+                    return;
                 }
                 final HashMap<String, String> params = new HashMap<>();
 
@@ -161,7 +175,7 @@ public class ProfileActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        final String html = RequestHttpURLConnection.requestWithFile("https://be-light.store/api/hoster?_method=PUT", params, true, "POST",file,"profile");
+                        final String html = RequestHttpURLConnection.requestWithFile("https://be-light.store/api/hoster?_method=PUT", params, true, "POST", file, "profile");
                         runOnUiThread(new Runnable() {
 
                             @Override
@@ -173,6 +187,8 @@ public class ProfileActivity extends AppCompatActivity {
                                     Long status = (Long) object.get("status");
                                     if (status == 200) {
                                         Toast.makeText(ProfileActivity.this, "프로필을 수정하였습니다.", Toast.LENGTH_LONG).show();
+
+                                        MySharedPreferences.setProfileImgPath(path);
                                         finish();
                                     } else {
                                         Toast.makeText(ProfileActivity.this, "프로필수정을 실패하였습니다.", Toast.LENGTH_LONG).show();
@@ -198,14 +214,12 @@ public class ProfileActivity extends AppCompatActivity {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
-                String path = null;
                 try {
-                    path = PathUtil.getPath(this,uri);
+                    path = PathUtil.getPath(this, uri);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
                 file = new File(path);
-                MySharedPreferences.setProfileImgPath(path);
                 profile.setImageURI(uri);
                 OvalProfile();
             }

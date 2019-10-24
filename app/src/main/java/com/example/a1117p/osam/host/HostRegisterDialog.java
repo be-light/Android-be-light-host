@@ -145,6 +145,10 @@ public class HostRegisterDialog extends Dialog {
                     } else if (CloseTime.equals("클릭")) {
                         Toast.makeText(context, "마감시간을 입력하세요", Toast.LENGTH_LONG).show();
                         return;
+                    }else if(file==null){
+
+                        Toast.makeText(context, "호스트사진을 변경해주세요.", Toast.LENGTH_LONG).show();
+                        return;
                     }
 
                     Geocoder geocoder = new Geocoder(context);
@@ -222,6 +226,8 @@ public class HostRegisterDialog extends Dialog {
             HostPostalCode.setText(item.getPostalCode());
             openTime.setText(item.getOpenTime());
             closeTime.setText(item.getCloseTime());
+            new DownloadImageTask(img).execute(item.getHostImage());
+
 
             findViewById(R.id.edit_btn).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -255,6 +261,10 @@ public class HostRegisterDialog extends Dialog {
                         return;
                     } else if (CloseTime.equals("클릭")) {
                         Toast.makeText(context, "마감시간을 입력하세요", Toast.LENGTH_LONG).show();
+                        return;
+                    }else if(file==null){
+
+                        Toast.makeText(context, "호스트사진을 변경해주세요.", Toast.LENGTH_LONG).show();
                         return;
                     }
 
@@ -291,7 +301,7 @@ public class HostRegisterDialog extends Dialog {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            final String html = RequestHttpURLConnection.request("https://be-light.store/api/host?_method=PUT", params, true, "POST");
+                            final String html = RequestHttpURLConnection.requestWithFile("https://be-light.store/api/host?_method=PUT", params, true, "POST",file,"hostImage");
                             context.runOnUiThread(new Runnable() {
 
                                 @Override
